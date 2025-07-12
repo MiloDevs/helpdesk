@@ -1,15 +1,17 @@
-// Import the framework and instantiate it
 import Fastify from "fastify";
+import usersRoute from "./routes/users/index.js";
+import issuesRoute from "./routes/issues/index.js";
 const fastify = Fastify({
   logger: true,
 });
 
-// Declare a route
 fastify.get("/", async function handler(request, reply) {
   return { hello: "world" };
 });
 
-// Run the server!
+fastify.register(usersRoute, { prefix: "v1" });
+fastify.register(issuesRoute, { prefix: "v1" });
+
 try {
   await fastify.listen({ port: 5000 });
 } catch (err) {
