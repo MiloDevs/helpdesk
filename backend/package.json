@@ -1,0 +1,27 @@
+{
+  "type": "module",
+  "name": "helpdesk-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "nodemon src/main.js",
+    "db:push": "npx drizzle-kit push",
+    "db:generate": "npx drizzle-kit generate",
+    "db:migrate": "npx drizzle-kit migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@libsql/client": "^0.15.9",
+    "dotenv": "^17.2.0",
+    "drizzle-orm": "^0.44.2",
+    "fastify": "^5.4.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.4",
+    "nodemon": "^3.1.10"
+  }
+}
