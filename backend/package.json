@@ -15,6 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@fastify/websocket": "^11.1.0",
     "@libsql/client": "^0.15.9",
     "dotenv": "^17.2.0",
     "drizzle-orm": "^0.44.2",

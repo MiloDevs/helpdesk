@@ -45,7 +45,7 @@ async function handler(req, reply) {
   }
 }
 
-export async function getUserIssues(req, reply) {
+async function getUserIssues(req, reply) {
   const { userId } = req.params;
   if (!userId) {
     reply.send({
@@ -83,8 +83,16 @@ export async function getUserIssues(req, reply) {
   }
 }
 
+async function getDevideId(req, reply) {
+  const uuid = crypto.randomUUID();
+  reply.send({
+    id: uuid,
+  });
+}
+
 export default function (fastify, opts, done) {
   fastify.post("/user", handler);
   fastify.get("/user/issues/:userId", getUserIssues);
+  fastify.get("/uuid", getDevideId);
   done();
 }
