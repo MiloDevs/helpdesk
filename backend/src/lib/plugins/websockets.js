@@ -29,26 +29,28 @@ export default fp(function (fastify, opts, done) {
     done();
   });
 
-  fastify.get(
-    "/ws",
-    { websocket: true },
-    async function handler(connection, req, reply) {
-      connection.socket.on("message", function (message) {
-        try {
-          const data = JSON.parse(message.toString());
-          if (data.event === "register") {
-            clients.add({
-              id: data.deviceId,
-              socket: connection,
-            });
+  fastify.register(async function (fastify) {
+    fastify.get(
+      "/ws",
+      { websocket: true },
+      async function handler(connection, req, reply) {
+        connection.on("message", function (message) {
+          try {
+            const data = JSON.parse(message.toString());
+            if (data.event === "register") {
+              clients.add({
+                id: data.deviceId,
+                socket: connection,
+              });
+            }
+            console.log(data);
+          } catch (error) {
+            console.log("Error parsing message:", error);
           }
-          console.log(data);
-        } catch (error) {
-          console.log("Error parsing message:", error);
-        }
-      });
-    }
-  );
+        });
+      }
+    );
+  });
 
   done();
 });

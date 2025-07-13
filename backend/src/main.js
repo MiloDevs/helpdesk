@@ -1,14 +1,11 @@
 import Fastify from "fastify";
 import usersRoute from "./routes/users/index.js";
 import issuesRoute from "./routes/issues/index.js";
-import fastifyWebsocket from "@fastify/websocket";
 import websocket from "./lib/plugins/websockets.js";
 
 const fastify = Fastify({
   logger: true,
 });
-
-const clients = new Set();
 
 fastify.register(websocket);
 fastify.register(usersRoute, { prefix: "/api/v1" });
