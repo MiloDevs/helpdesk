@@ -263,6 +263,7 @@ export async function assignIssueHandler(req, reply) {
   }
 }
 
+
 export default function (fastify, opts, done) {
   fastify.post("/issue", createIssueHandler);
   fastify.get("/issue/:id", getIssueHandler);
