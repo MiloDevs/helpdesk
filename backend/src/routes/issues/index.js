@@ -13,20 +13,16 @@ async function createIssueHandler(req, reply) {
       .code(400);
   }
   if (!office_number) {
-    reply
-      .send({
-        error: "missing office_number",
-        message: "Please provide a valid Office Number",
-      })
-      .code(400);
+    reply.code(400).send({
+      error: "missing office_number",
+      message: "Please provide a valid Office Number",
+    });
   }
   if (!issue_description) {
-    reply
-      .send({
-        error: "missing issue_description",
-        message: "Please provide a valid Issue Description",
-      })
-      .code(400);
+    reply.code(400).send({
+      error: "missing issue_description",
+      message: "Please provide a valid Issue Description",
+    });
   }
 
   try {
@@ -46,24 +42,20 @@ async function createIssueHandler(req, reply) {
     });
   } catch (error) {
     console.log(error);
-    reply
-      .send({
-        error: "server error",
-        message: "Something went wrong creating your issue, please try again!",
-      })
-      .code(500);
+    reply.code(500).send({
+      error: "server error",
+      message: "Something went wrong creating your issue, please try again!",
+    });
   }
 }
 
 export async function getIssueHandler(req, reply) {
   const { id } = req.params;
   if (!id) {
-    reply
-      .send({
-        error: true,
-        message: "Please provide a valid id",
-      })
-      .code(400);
+    reply.code(400).send({
+      error: true,
+      message: "Please provide a valid id",
+    });
   } else {
     try {
       const issue = await db
@@ -71,32 +63,26 @@ export async function getIssueHandler(req, reply) {
         .from(issuesTable)
         .where(eq(issuesTable.id, id));
       if (!issue[0]) {
-        reply
-          .send({
-            error: "issue not found",
-            message: "No issue found with given id",
-          })
-          .code(404);
+        reply.code(404).send({
+          error: "issue not found",
+          message: "No issue found with given id",
+        });
       }
       console.log(issue);
       reply.send(issue[0]);
     } catch (error) {
       console.log(error);
       if (error.cause?.message.includes("SQLITE_ERROR: no such column")) {
-        reply
-          .send({
-            error: "issue not found",
-            message: "No issue found with given id",
-          })
-          .code(404);
+        reply.code(404).send({
+          error: "issue not found",
+          message: "No issue found with given id",
+        });
       }
-      reply
-        .send({
-          error: true,
-          message:
-            "Something went wrong retrieving your issue, please try again!",
-        })
-        .code(500);
+      reply.code(500).send({
+        error: true,
+        message:
+          "Something went wrong retrieving your issue, please try again!",
+      });
     }
   }
 }
@@ -111,12 +97,10 @@ export async function updateIssueHandler(req, reply) {
     assignee_id,
   } = req.body;
   if (!id) {
-    reply
-      .send({
-        error: "missing id",
-        message: "Please provide a valid id",
-      })
-      .code(400);
+    reply.code(400).send({
+      error: "missing id",
+      message: "Please provide a valid id",
+    });
   } else {
     try {
       const issue = await db
@@ -131,32 +115,26 @@ export async function updateIssueHandler(req, reply) {
         .where(eq(issuesTable.id, id))
         .returning({ updatedId: issuesTable.id });
       if (!issue[0]) {
-        reply
-          .send({
-            error: "issue not found",
-            message: "No issue found with given id",
-          })
-          .code(404);
+        reply.code(404).send({
+          error: "issue not found",
+          message: "No issue found with given id",
+        });
       }
       console.log(issue);
       reply.send(issue[0]);
     } catch (error) {
       console.log(error.cause.message);
       if (error.cause.message.includes("SQLITE_ERROR: no such column")) {
-        reply
-          .send({
-            error: "issue not found",
-            message: "No issue found with given id",
-          })
-          .code(404);
+        reply.code(404).send({
+          error: "issue not found",
+          message: "No issue found with given id",
+        });
       }
-      reply
-        .send({
-          error: "server error",
-          message:
-            "Something went wrong retrieving your issue, please try again!",
-        })
-        .code(404);
+      reply.code(404).send({
+        error: "server error",
+        message:
+          "Something went wrong retrieving your issue, please try again!",
+      });
     }
   }
 }
@@ -164,22 +142,18 @@ export async function updateIssueHandler(req, reply) {
 export async function deleteIssueHandler(req, reply) {
   const { id } = req.params;
   if (!id) {
-    reply
-      .send({
-        error: "missing id",
-        message: "Please provide a valid id",
-      })
-      .code(400);
+    reply.code(400).send({
+      error: "missing id",
+      message: "Please provide a valid id",
+    });
   } else {
     try {
       const issue = await db.delete(issuesTable).where(eq(issuesTable.id, id));
       if (issue.rowsAffected === 0) {
-        reply
-          .send({
-            error: "issue not found",
-            message: "No issue found with given id",
-          })
-          .code(404);
+        reply.code(404).send({
+          error: "issue not found",
+          message: "No issue found with given id",
+        });
       }
       console.log(issue);
       reply.send({
@@ -188,20 +162,15 @@ export async function deleteIssueHandler(req, reply) {
     } catch (error) {
       console.log(error);
       if (error.cause.message.includes("SQLITE_ERROR: no such column")) {
-        reply
-          .send({
-            error: "issue not found",
-            message: "No issue found with given id",
-          })
-          .code(404);
+        reply.code(404).send({
+          error: "issue not found",
+          message: "No issue found with given id",
+        });
       }
-      reply
-        .send({
-          error: "server error",
-          message:
-            "Something went wrong deleting your issue, please try again!",
-        })
-        .code(500);
+      reply.code(500).send({
+        error: "server error",
+        message: "Something went wrong deleting your issue, please try again!",
+      });
     }
   }
 }
@@ -209,26 +178,16 @@ export async function deleteIssueHandler(req, reply) {
 export async function assignIssueHandler(req, reply) {
   const { issueId, userId } = req.params;
   if (!userId) {
-    reply.send(
-      {
-        error: "missing user_id",
-        message: "Please provide an assignee id",
-      },
-      {
-        status: 400,
-      }
-    );
+    reply.code(400).send({
+      error: "missing user_id",
+      message: "Please provide an assignee id",
+    });
   }
   if (!issueId) {
-    reply.send(
-      {
-        error: "missing issue_id",
-        message: "Please provide an issue id",
-      },
-      {
-        status: 400,
-      }
-    );
+    reply.code(400).send({
+      error: "missing issue_id",
+      message: "Please provide an issue id",
+    });
   }
 
   try {
@@ -247,22 +206,17 @@ export async function assignIssueHandler(req, reply) {
   } catch (error) {
     console.log(error);
     if (error.cause?.message.includes("SQLITE_ERROR: no such column")) {
-      reply
-        .send({
-          error: "issue not found",
-          message: "No issue found with given id",
-        })
-        .code(404);
+      reply.code(404).send({
+        error: "issue not found",
+        message: "No issue found with given id",
+      });
     }
-    reply
-      .send({
-        error: "server error",
-        message: "Something went wrong creating your issue, please try again!",
-      })
-      .code(500);
+    reply.code(500).send({
+      error: "server error",
+      message: "Something went wrong creating your issue, please try again!",
+    });
   }
 }
-
 
 export default function (fastify, opts, done) {
   fastify.post("/issue", createIssueHandler);

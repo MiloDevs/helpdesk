@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import usersRoute from "./routes/users/index.js";
 import issuesRoute from "./routes/issues/index.js";
+import authRoute from "./routes/auth/index.js";
 import websocket from "./lib/plugins/websockets.js";
 
 const fastify = Fastify({
@@ -10,6 +11,7 @@ const fastify = Fastify({
 fastify.register(websocket);
 fastify.register(usersRoute, { prefix: "/api/v1" });
 fastify.register(issuesRoute, { prefix: "/api/v1" });
+fastify.register(authRoute, { prefix: "/api/v1" });
 fastify.register(async function handler(fastify) {
   fastify.post("/", async function handler(request, reply) {
     const { id } = request.body;
