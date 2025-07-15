@@ -1,0 +1,18 @@
+{
+  "admin": {
+    "permissions": [
+      {
+        "route": ["*"],
+        "methods": ["*"]
+      }
+    ]
+  },
+  "user": {
+    "permissions": [
+      {
+        "route": "/user/issues/:userId",
+        "methods": ["GET"]
+      }
+    ]
+  }
+}

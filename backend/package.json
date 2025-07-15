@@ -2,7 +2,7 @@
   "type": "module",
   "name": "helpdesk-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "node src/main.js",
     "dev": "nodemon src/main.js",
@@ -19,7 +19,9 @@
     "@libsql/client": "^0.15.9",
     "dotenv": "^17.2.0",
     "drizzle-orm": "^0.44.2",
-    "fastify": "^5.4.0"
+    "fastify": "^5.4.0",
+    "fastify-plugin": "^5.0.1",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "bcryptjs": "^3.0.2",

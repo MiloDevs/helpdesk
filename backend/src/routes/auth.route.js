@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
-import db from "../../db/index.js";
-import { usersTable } from "../../db/schema.js";
+import db from "../db/index.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import usersModel from "../models/users.model.js";
 
 async function login(req, reply) {
   const { name, password } = req.body;
   if (!name) {
-    console.log("this has sent");
     return reply.code(400).send({
       error: "missing name",
       message: "Please provide a valid name",
@@ -14,7 +14,6 @@ async function login(req, reply) {
   }
 
   if (!password) {
-    console.log("this has sent");
     return reply.code(400).send({
       error: "missing password",
       message: "Please provide a valid password",
@@ -24,8 +23,8 @@ async function login(req, reply) {
   try {
     const user = await db
       .select()
-      .from(usersTable)
-      .where(eq(usersTable.name, name));
+      .from(usersModel)
+      .where(eq(usersModel.name, name));
     if (user.length === 0) {
       return reply.code(404).send({
         error: "user not found",
@@ -39,8 +38,17 @@ async function login(req, reply) {
         message: "Invalid username or password, please try again!",
       });
     }
+    // sign jwt
+    const token = jwt.sign(
+      {
+        username: name,
+        role: user[0].role,
+      },
+      process.env.JWT_SECRET,
+      { algorithm: "HS256", expiresIn: "1h" }
+    );
     return reply.send({
-      user: user[0].id,
+      token,
       message: "Login successful",
     });
   } catch (error) {

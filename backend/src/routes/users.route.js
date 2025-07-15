@@ -1,12 +1,12 @@
 import crypto, { randomBytes } from "crypto";
-import db from "../../db/index.js";
-import { usersTable } from "../../db/schema.js";
+import db from "../db/index.js";
+import usersModel from "../models/users.model.js";
 import bcrypt from "bcryptjs";
 
 async function createUser(req, reply) {
   const { name } = req.body;
   if (!name) {
-    reply.code(400).send({
+    return reply.code(400).send({
       error: "missing name",
       message: "Please provide a valid name",
     });
@@ -21,9 +21,9 @@ async function createUser(req, reply) {
       password: hashGenPasswrd,
     };
 
-    await db.insert(usersTable).values(user);
+    await db.insert(usersModel).values(user);
 
-    reply.send({
+    return reply.send({
       id: user.id,
       password: genPassword,
       message: "User created successfully",
@@ -35,12 +35,12 @@ async function createUser(req, reply) {
         "SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: users_table.name"
       )
     ) {
-      reply.code(400).send({
+      return reply.code(400).send({
         error: "duplicate username",
         message: "User with the given name already exists",
       });
     }
-    reply.code(500).send({
+    return reply.code(500).send({
       error: "server error",
       message: "Something went wrong creating your user, please try again!",
     });
@@ -50,7 +50,7 @@ async function createUser(req, reply) {
 async function getUserIssues(req, reply) {
   const { userId } = req.params;
   if (!userId) {
-    reply.send({
+    return reply.code(400).send({
       error: "missing userId",
       message: "Please provide a valid userId",
     });
@@ -60,22 +60,10 @@ async function getUserIssues(req, reply) {
       where: (issue, { eq }) => eq(issue.assigneeId, userId),
     });
 
-    reply.send(issues);
+    return reply.send(issues);
   } catch (error) {
     console.log(error);
-    // if (
-    //   error.cause?.message.includes(
-    //     "SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: users_table.name"
-    //   )
-    // ) {
-    //   reply
-    //     .send({
-    //       error: true,
-    //       message: "User with the given name already exists",
-    //     })
-    //     .code(400);
-    // }
-    reply.code(500).send({
+    return reply.code(500).send({
       error: "server error",
       message: "Something went wrong retreiving your issues, please try again!",
     });
@@ -84,7 +72,7 @@ async function getUserIssues(req, reply) {
 
 async function getDevideId(req, reply) {
   const uuid = crypto.randomUUID();
-  reply.send({
+  return reply.send({
     id: uuid,
   });
 }
