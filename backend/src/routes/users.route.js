@@ -29,7 +29,6 @@ async function createUser(req, reply) {
       message: "User created successfully",
     });
   } catch (error) {
-    console.log(error);
     if (
       error.cause.message.includes(
         "SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: users_table.name"

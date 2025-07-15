@@ -26,7 +26,13 @@ export default fp(function (fastify, opts, done) {
             });
           }
         } catch (error) {
-          console.log(error);
+          console.log(error.message);
+          if(error.message === "jwt expired") {
+             return reply.code(401).send({
+                error: "expired token",
+                message: "Token expired, please login again",
+              });
+          }
           return reply.code(500).send({
             error: "server error",
             message: "Something went wrong, please try again!",
